@@ -4,11 +4,7 @@ from pyparsing import pyparsing_common as ppc
 from pyparsing import Word, alphas, alphanums, CaselessKeyword
 from pyparsing import MatchFirst
 
-#Define the numbers
-realNum = ppc.real()
-intNum = ppc.signed_integer()
-
-#Define the reserved words
+#Defining the reserved words informed on the description
 PROGRAMA, CAR, INT, RETORNE = map(CaselessKeyword,
                             "programa car int retorne".split())
 ESCREVA, NOVALINHA, SE, ENTAO = map(CaselessKeyword,
@@ -32,3 +28,7 @@ keywords = MatchFirst(
         LEIA
     )
 )
+
+#Define the numbers
+realNum = ppc.real()
+intNum = ppc.signed_integer()
