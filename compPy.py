@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 from pyparsing import pyparsing_common as ppc
 from pyparsing import Word, alphas, alphanums, CaselessKeyword
-from pyparsing import MatchFirst, Forward
+from pyparsing import MatchFirst, Forward, ZeroOrMore
 
-#>>>>>>>>>>>>>>> BASICS DEFINITIONS>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>> BASICS DEFINITIONS>>>>>>>>>>>>>>>>>>>>>>>
 
 #Defining the reserved words informed on the description
 PROGRAMA, CAR, INT, RETORNE = map(CaselessKeyword,
@@ -27,10 +27,12 @@ keywords = MatchFirst(
         SENAO,
         ENQUANTO,
         EXECUTE,
-        LEIA,
-        TERMINATOR
+        LEIA
     )
 ).setName("Reserved Words")
+
+#Define the Terminator character
+TERMINATOR = Word(";")
 
 #Define the numbers
 realNum = ppc.real().setName("Real Number")
@@ -45,7 +47,7 @@ Type = (
     CAR
 ).setName("Type")
 
-#<<<<<<<<<<<<<<< BASICS DEFINITIONS<<<<<<<<<<<<<<<<<<
+#<<<<<<<<<<<<<<< BASICS DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<<<
 
 #>>>>>>>>>>>>>>> EXPRESSIONS DECLARATIONS>>>>>>>>>>>>>>>>>>
 
@@ -61,16 +63,19 @@ UneqExpr = Forward()
 AddExpr = Forward()
 MultExpr = Forward()
 ListExpr = Forward()
+ListCommand = Forward()
+ListDeclVar = Forward()
+DeclVar = Forward()
 
 #<<<<<<<<<<<<<<< EXPRESSIONS DECLARATIONS<<<<<<<<<<<<<<<<<<
 
-#>>>>>>>>>>>>>>> EXPRESSIONS DEFINITIONS>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>> EXPRESSIONS DEFINITIONS>>>>>>>>>>>>>>>>>>>
 
-#Defining the Lvalue Expression
+#Defining the Literal Value Expression
 LValueExpr = (
     (identifier + Word("[") + Expr + Word("[")) |
     identifier
-)
+).setName("Literal Value Expression")
 
 #Defining the List of expressions body
 ListExpr <<= (
@@ -84,8 +89,8 @@ PrimExpr = (
     (identifier + Word("()")) |
     (identifier + Word("[") + Expr + Word("]")) |
     identifier |
-    # carconst |
-    # intconst |
+    Word(alphanums) | #carconst
+    intNum | #intconst
     (Word("(") +  Expr + Word("("))
 ).setName("Primary Expression")
 
@@ -154,7 +159,35 @@ AssignExpr <<= (
 #Defining the expression's body
 Expr <<= AssignExpr.setName("Expression")
 
-#Defining the command's body
+#<<<<<<<<<<<<<<< EXPRESSIONS DEFINITIONS<<<<<<<<<<<<<<<<<<
+
+#>>>>>>>>>>>>>>> FUNCTIONS, VARIABLES AND PARAMETERS>>>>>>
+
+#Variable declaration definition
+DeclVar <<= (
+    (Word(",") + identifier + DeclVar) |
+    (Word(",") + identifier + Word("[") + intNum + Word("") + DeclVar)
+).setName("Variable Declaration")
+
+#Defining the ListDeclVar's body
+ListDeclVar <<= (
+    # ZeroOrMore(
+        (Type + identifier + DeclVar + TERMINATOR + ListDeclVar) |
+        (Type + identifier + Word("[") + intNum + Word("]") +
+        DeclVar + TERMINATOR + ListDeclVar)
+    # )
+).setName("List of variable's declarations")
+
+#Block definitions
+Block = (
+    (Word("{") + ListDeclVar + ListCommand + Word("}")) |
+    (Word("{") + ListDeclVar + Word("}"))
+).setName("Block")
+#<<<<<<<<<<<<<<< FUNCTIONS, VARIABLES AND PARAMETERS<<<<<<
+
+#>>>>>>>>>>>>>>> COMMAND DEFINITIONS>>>>>>>>>>>>>>>>>>>>>>
+
+#Defining of the command's body
 Command <<= (
     TERMINATOR |
     (Expr + TERMINATOR) |
@@ -165,8 +198,14 @@ Command <<= (
     (NOVALINHA + TERMINATOR) |
     (SE + Word("(") + Expr + Word(")") + ENTAO + Command) |
     (SE + Word("(") + Expr + Word(")") + ENTAO + Command + SENAO + Command) |
-    (ENQUANTO + Word("(") + Expr + Word(")") + EXECUTE + Command) 
-    # | Block
+    (ENQUANTO + Word("(") + Expr + Word(")") + EXECUTE + Command) |
+    Block
 ).setName("Command")
 
-#<<<<<<<<<<<<<<< EXPRESSIONS DEFINITIONS<<<<<<<<<<<<<<<<<<
+#Definition of the command's list
+ListCommand <<= (
+    Command |
+    (Command + ListCommand)
+).setName("Command List")
+
+#<<<<<<<<<<<<<<< COMMAND DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<
