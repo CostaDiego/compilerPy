@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+""" A python based compiler
+Developed by Diego Costa
+
+Available on GitHub: https://github.com/CostaDiego/compilerPy
+
+"""
+
+
 from pyparsing import pyparsing_common as ppc
 from pyparsing import Word, alphas, alphanums, CaselessKeyword
 from pyparsing import MatchFirst, Forward, ZeroOrMore
