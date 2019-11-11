@@ -17,7 +17,7 @@ The following packages will be needed. They can be installed mannually using the
 Or, just by running the following command:
 
 ```bash
-pip3 install -r requirements.txt
+pip3 install -r requirements/requirements.txt
 ```
 
 ## Description
