@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ A python based compiler
-Developed by Diego Costa
+Developed by Diego Costa for the 2019-2 compiler class at UFG
 
 Available on GitHub: https://github.com/CostaDiego/compilerPy
 
