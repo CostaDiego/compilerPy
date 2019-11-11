@@ -22,6 +22,6 @@ pip3 install -r requirements.txt
 
 ## Description
 This work aims to develop and better understand the compiler structure addressed in the UFG 2019-2 compiler class. The development has been divided in 3 stages, each one has its own specification as shown below and on the [specification folder](./specifications).
-- [x] [Part 1](./specifications/projeto-part1)
-- [] Part 2
-- [] Part 3
+- [x] [Part 1](./specifications/projeto-part1.pdf)
+- [ ] Part 2
+- [ ] Part 3
