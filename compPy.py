@@ -41,7 +41,7 @@ keywords = MatchFirst(
 ).setName("Reserved Words")
 
 #Define the Terminator character
-TERMINATOR = Word(";")
+TERMINATOR = Word(";").setName("Terminator")
 
 #Define the numbers
 realNum = ppc.real().setName("Real Number")
@@ -76,6 +76,7 @@ ListCommand = Forward()
 ListDeclVar = Forward()
 DeclVar = Forward()
 ListParameterCont = Forward()
+DeclFuncVar = Forward()
 
 #<<<<<<<<<<<<<<< EXPRESSIONS DECLARATIONS<<<<<<<<<<<<<<<<<<
 
@@ -239,3 +240,33 @@ ListParameter = (
 ).setName("Parameter list") * (0,1)
 
 #<<<<<<<<<<<<<<< PARAMETERS DEFINITIONS<<<<<<<<<<<<<<<<<<<
+
+#>>>>>>>>>>>>>>> FUNCTIONS DEFINITIONS>>>>>>>>>>>>>>>>>>>>
+
+#Function declaration's body
+DeclFunc = (
+    Word("(") + ListParameter + Word(")") + Block
+).setName("Function Declaration")
+
+#Function and variable declaration's body
+DeclFuncVar <<=(
+    (Type + identifier + DeclVar + TERMINATOR + DeclFuncVar) |
+    (Type + identifier + Word("[") + intNum + Word("]") + DeclVar + TERMINATOR + DeclFuncVar) |
+    (Type + identifier + DeclFunc + DeclFuncVar)
+).setName("Function Variable Declaration") * (0,1)
+
+#<<<<<<<<<<<<<<< FUNCTIONS DEFINITIONS<<<<<<<<<<<<<<<<<<<<
+
+#>>>>>>>>>>>>>>> PROGRAM DEFINITIONS>>>>>>>>>>>>>>>>>>>>>>
+
+#Program declaration's body
+DeclProg = (
+    PROGRAMA + Block
+)
+
+#Program Initial simbol
+Program = (
+    DeclFuncVar + DeclProg
+)
+
+#<<<<<<<<<<<<<<< PROGRAM DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<
