@@ -75,6 +75,7 @@ ListExpr = Forward()
 ListCommand = Forward()
 ListDeclVar = Forward()
 DeclVar = Forward()
+ListParameterCont = Forward()
 
 #<<<<<<<<<<<<<<< EXPRESSIONS DECLARATIONS<<<<<<<<<<<<<<<<<<
 
@@ -98,7 +99,7 @@ PrimExpr = (
     (identifier + Word("()")) |
     (identifier + Word("[") + Expr + Word("]")) |
     identifier |
-    Word(alphanums) | #carconst
+    Word(alphanums).setName("carconst") | #carconst
     intNum | #intconst
     (Word("(") +  Expr + Word("("))
 ).setName("Primary Expression")
@@ -170,7 +171,7 @@ Expr <<= AssignExpr.setName("Expression")
 
 #<<<<<<<<<<<<<<< EXPRESSIONS DEFINITIONS<<<<<<<<<<<<<<<<<<
 
-#>>>>>>>>>>>>>>> FUNCTIONS, VARIABLES AND PARAMETERS>>>>>>
+#>>>>>>>>>>>>>>> VARIABLES AND PARAMETERS DEFINITIONS>>>>>
 
 #Variable declaration definition
 DeclVar <<= (
@@ -185,14 +186,30 @@ ListDeclVar <<= (
         (Type + identifier + Word("[") + intNum + Word("]") +
         DeclVar + TERMINATOR + ListDeclVar)
     # )
-).setName("List of variable's declarations")
+).setName("List of variable's declarations") * (0,1)
 
 #Block definitions
 Block = (
     (Word("{") + ListDeclVar + ListCommand + Word("}")) |
     (Word("{") + ListDeclVar + Word("}"))
 ).setName("Block")
-#<<<<<<<<<<<<<<< FUNCTIONS, VARIABLES AND PARAMETERS<<<<<<
+
+#Parameters contents list definition
+ListParameterCont <<= (
+    (Type + identifier) |
+    (Type + identifier + Word("[]")) |
+    (Type + identifier + Word(",") + ListParameterCont) |
+    (Type + identifier + Word("[]") + Word(",") + ListParameterCont)
+).setName("Parameter list content")
+
+#Parameter list definition
+ListParameter = (
+    # ZeroOrMore(
+        ListParameterCont
+    # )
+).setName("Parameter list") * (0,1)
+
+#<<<<<<<<<<<<<<< VARIABLES AND PARAMETERS DEFINITIONS<<<<<
 
 #>>>>>>>>>>>>>>> COMMAND DEFINITIONS>>>>>>>>>>>>>>>>>>>>>>
 
