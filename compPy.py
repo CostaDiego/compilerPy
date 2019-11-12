@@ -171,7 +171,7 @@ Expr <<= AssignExpr.setName("Expression")
 
 #<<<<<<<<<<<<<<< EXPRESSIONS DEFINITIONS<<<<<<<<<<<<<<<<<<
 
-#>>>>>>>>>>>>>>> VARIABLES AND PARAMETERS DEFINITIONS>>>>>
+#>>>>>>>>>>>>>>> VARIABLES DEFINITIONS>>>>>>>>>>>>>>>>>>>>
 
 #Variable declaration definition
 DeclVar <<= (
@@ -194,22 +194,7 @@ Block = (
     (Word("{") + ListDeclVar + Word("}"))
 ).setName("Block")
 
-#Parameters contents list definition
-ListParameterCont <<= (
-    (Type + identifier) |
-    (Type + identifier + Word("[]")) |
-    (Type + identifier + Word(",") + ListParameterCont) |
-    (Type + identifier + Word("[]") + Word(",") + ListParameterCont)
-).setName("Parameter list content")
-
-#Parameter list definition
-ListParameter = (
-    # ZeroOrMore(
-        ListParameterCont
-    # )
-).setName("Parameter list") * (0,1)
-
-#<<<<<<<<<<<<<<< VARIABLES AND PARAMETERS DEFINITIONS<<<<<
+#<<<<<<<<<<<<<<< VARIABLES DEFINITIONS<<<<<<<<<<<<<<<<<<<<
 
 #>>>>>>>>>>>>>>> COMMAND DEFINITIONS>>>>>>>>>>>>>>>>>>>>>>
 
@@ -235,3 +220,22 @@ ListCommand <<= (
 ).setName("Command List")
 
 #<<<<<<<<<<<<<<< COMMAND DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<
+
+#>>>>>>>>>>>>>>> PARAMETERS DEFINITIONS>>>>>>>>>>>>>>>>>>>
+
+#Parameters contents list definition
+ListParameterCont <<= (
+    (Type + identifier) |
+    (Type + identifier + Word("[]")) |
+    (Type + identifier + Word(",") + ListParameterCont) |
+    (Type + identifier + Word("[]") + Word(",") + ListParameterCont)
+).setName("Parameter list content")
+
+#Parameter list definition
+ListParameter = (
+    # ZeroOrMore(
+        ListParameterCont
+    # )
+).setName("Parameter list") * (0,1)
+
+#<<<<<<<<<<<<<<< PARAMETERS DEFINITIONS<<<<<<<<<<<<<<<<<<<
