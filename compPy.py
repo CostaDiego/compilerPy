@@ -246,14 +246,14 @@ ListParameter = (
 #Function declaration's body
 DeclFunc = (
     Word("(") + ListParameter + Word(")") + Block
-).setName("Function Declaration")
+).setName("Function")
 
 #Function and variable declaration's body
 DeclFuncVar <<=(
     (Type + identifier + DeclVar + TERMINATOR + DeclFuncVar) |
     (Type + identifier + Word("[") + intNum + Word("]") + DeclVar + TERMINATOR + DeclFuncVar) |
     (Type + identifier + DeclFunc + DeclFuncVar)
-).setName("Function Variable Declaration") * (0,1)
+).setName("Function Variable") * (0,1)
 
 #<<<<<<<<<<<<<<< FUNCTIONS DEFINITIONS<<<<<<<<<<<<<<<<<<<<
 
@@ -262,11 +262,11 @@ DeclFuncVar <<=(
 #Program declaration's body
 DeclProg = (
     PROGRAMA + Block
-)
+).setName("Program")
 
 #Program Initial simbol
 Program = (
     DeclFuncVar + DeclProg
-)
+).setName("Initial Simbol")
 
 #<<<<<<<<<<<<<<< PROGRAM DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<
