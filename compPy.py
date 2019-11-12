@@ -270,3 +270,16 @@ Program = (
 ).setName("Initial Simbol")
 
 #<<<<<<<<<<<<<<< PROGRAM DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<
+
+#>>>>>>>>>>>>>>> COMMENT DEFINITIONS>>>>>>>>>>>>>>>>>>>>>>
+
+Comment  = "/*" + alphanums + "*/"
+
+#<<<<<<<<<<<<<<< COMMENT DEFINITIONS<<<<<<<<<<<<<<<<<<<<<<
+
+Program.ignore(Comment)
+
+if __name__ == '__main__':
+    Program.runTests(""" 
+    programa { ; }
+    """)
